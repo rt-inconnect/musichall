@@ -1,0 +1,42 @@
+<div class="rt-chat-messages-comments">
+  <h2 class="rt-background">
+    <a href class="pull-right" ng-if="!chat.chatmuted" title="Звуки чата включены" ng-click="chat.mute()">
+      <i class="icon-volume-high"></i>
+    </a>
+    <a href class="pull-right" ng-if="chat.chatmuted" title="Звуки чата выключены" ng-click="chat.mute()">
+      <i class="icon-volume-off-1"></i>
+    </a>  
+    <i class="icon-chat-1"></i> Чат
+  </h2>
+  <div class="rt-comment media list-group-item ng-scope" ng-repeat="message in chat.items track by $index">
+    <span class="pull-left thumb-sm">
+      <img ng-src="{{message.createdBy.avatarUrl}}" alt="{{message.createdBy.login}}">
+    </span>
+    <span class="media-body block m-b-none">
+      <span class="rt-bold">{{message.text}}</span><br>
+      <div class="truncate">
+        <span class="pull-right"><i class="icon-clock"></i> <i am-time-ago="message.createdAt"></i></span>
+        <a ui-sref="user.tracks({user:message.createdBy.login})" class="rt-muted">{{message.createdBy.login}}</a>
+      </div>
+    </span>
+  </div>
+  <div style="padding: 10px;">
+    <a href class="btn-flat pull-right" ng-click="chat.get()" style="margin-bottom:20px;">
+      <span class="fa fa-chevron-circle-down"></span> Load more...
+    </a>
+
+    <div ng-show='tracks.busy.all'>Loading data...</div>
+  </div>   
+</div>
+
+<footer class="rt-chatter-say">
+  <!-- chat form -->
+  <form class="m-b-none row" ng-submit="sendChat()">
+    <a class="pull-left thumb-sm avatar"><img ng-src="{{ cur_user.avatarUrl }}" class="img-circle"></a>
+    <div class="col-xs">
+      <input type="text" class="col-xs form-control" placeholder="Скажите что-нибудь?" ng-model="text" ng-disabled="sending" id="messageInput">
+    </div>
+    <!-- <button class="btn-flat" type="submit" ng-disabled="sending">Отправить</button> -->
+    <a href class="btn-flat visible-xs visible-sm" ng-click="toggleIsOpened()"><i class="icon icon-users"></i></a>
+  </form>
+</footer>

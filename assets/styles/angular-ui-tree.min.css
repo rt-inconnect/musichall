@@ -1,0 +1,17 @@
+/* angular-ui-tree css file */
+.angular-ui-tree-hidden {
+    display: none;
+}
+
+.angular-ui-tree-handle {
+    cursor: move;
+    text-decoration: none;
+
+}
+
+.angular-ui-tree-drag {
+    position: absolute;
+    pointer-events: none;
+    z-index: 999;
+    opacity: .8;
+}

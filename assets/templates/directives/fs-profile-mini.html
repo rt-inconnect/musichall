@@ -1,0 +1,20 @@
+<div class="fs-profile-mini">
+  <a href class="thumb pull-left m-r">
+    <img ng-src="{{user.avatarUrl}}">
+  </a>
+  <div class="clear">
+    <div fs-profile-popover="user" class="profile">
+        <a href="#{{user.login}}/tracks" class="text-info">{{ user.login }}</a>
+    </div>
+    <span class="small block text-muted pull-left">
+      <span><i class="icon icon-users"></i> {{user.numFollowers | kNumber}}</span> / 
+      <span><i class="fa fa-music"></i> {{user.numTracks | kNumber}}</span>
+    </span>
+    <div ng-if="cur_user.id != user.id">
+      <a class="btn btn-danger btn-sm pull-right active" title="Удалить из подписки" ng-if="user.isFollowed" ng-click="UserService.follow(user)">Подписан</a>
+      <a class="btn btn-primary btn-sm pull-right" title="Подписаться к пользователю" ng-if="!user.isFollowed" ng-click="UserService.follow(user)">Подписаться</a>
+    </div>
+    <div ng-if="cur_user.id == user.id" style="height:30px;">
+    </div>
+  </div>
+</div>

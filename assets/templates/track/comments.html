@@ -1,0 +1,24 @@
+<div class="rt-comments">
+  <div class="rt-comment media list-group-item" ng-repeat="comment in track.comments">
+    <span class="pull-left thumb-sm">
+      <img ng-src="{{comment.createdBy.avatarUrl}}">
+    </span>
+    <span class="media-body block m-b-none">
+      <span class="pull-right"><i class="icon-clock"></i> <i am-time-ago="comment.createdAt"></i> 
+        <a href title="Удалить комментарий" ng-if="IfService.isAdmin()" ng-click="TrackService.delcomment(comment, index, track.comments)">
+          <br/><i class="icon-trash pull-right"></i>
+        </a>
+      </span>
+      <span class="rt-bold ng-binding">{{ comment.content }}</span><br>
+      <a ui-sref="user.tracks({user:comment.createdBy.login})" class="rt-muted ng-binding">{{comment.createdBy.login}}</a>
+    </span>
+  </div>
+</div>
+
+<div style="padding: 10px;">
+    <a href class="btn-flat pull-right" ng-click="comments.getAll(commentsOpts)" style="margin-bottom:20px;">
+      <span class="fa fa-chevron-circle-down"></span> Load more...
+    </a>
+
+    <div ng-show='comments.busy.comments'>Loading data...</div>
+</div>

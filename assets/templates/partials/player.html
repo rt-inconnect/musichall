@@ -1,0 +1,128 @@
+<div class="rt-player-slider">
+  <a href title="Скрыть плеер" class="btn-flat close" ng-click="togglePlayer()"><i class="icon-cancel"></i></a>
+</div>
+
+<div class="rt-all-playlists" id="rt-all-playlists">
+  <div class="rt-brand">
+    <a href ng-click="goHome()" class="rt-logo">
+      <span class="musicbar animate inline m-l-sm" style="width:20px;height:20px">
+        <span class="bar1 a1 bg-primary lter"></span>
+        <span class="bar2 a2 bg-info lt"></span>
+        <span class="bar3 a3 bg-success"></span>
+        <span class="bar4 a4 bg-warning dk"></span>
+        <span class="bar5 a5 bg-danger dker"></span>
+      </span>
+      Music Hall
+    </a>
+    <a href title="Закрыть" class="pull-right" onclick="js:document.getElementById('rt-all-playlists').classList.remove('open');"><i class="icon-cancel-circled2"></i></a>
+  </div>
+  <h3 class="padder">Мои плэйлисты</h3>
+  <div class="rt-all-playlists-list">
+    
+    <rt-playlist-mini playlist="playlist" playlists="playlists.items.my" ng-repeat="playlist in playlists.items.my"></rt-playlist-mini>
+
+    <div style="padding: 10px;">
+      <a href class="btn-flat pull-right" ng-click="playlists.getAll(playlistsOpts)" style="margin-bottom:20px;">
+        <span class="fa fa-chevron-circle-down"></span> Load more...
+      </a>
+
+      <div ng-show='playlists.busy.my'>Loading data...</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="rt-all-playlists" id="rt-history">
+  <div class="rt-brand">
+    <a href ng-click="goHome()" class="rt-logo">
+      <span class="musicbar animate inline m-l-sm" style="width:20px;height:20px">
+        <span class="bar1 a1"></span>
+        <span class="bar2 a2"></span>
+        <span class="bar3 a3"></span>
+        <span class="bar4 a4"></span>
+        <span class="bar5 a5"></span>
+      </span>
+      Music Hall
+    </a>
+    <a href title="Закрыть" class="pull-right" onclick="js:document.getElementById('rt-history').classList.remove('open');"><i class="icon-cancel-circled2"></i></a>
+  </div>
+  <h3 class="padder">Радиостанции <span class="tasix">tas-ix</span></h3>
+  <div class="rt-all-playlists-list">
+    <a href class="rt-playlist-mini media list-group-item" ng-repeat="radio1 in RADIO" ng-click="player.play(radio1, $index, [])">
+      <span class="pull-left thumb-sm">
+        <img ng-src="{{radio1.coverUrl}}">
+      </span>
+      <span class="media-body block m-b-none truncate">
+        <span class="rt-bold">{{radio1.name}}</span><br>
+        <span class="rt-muted">Битрэйт: {{radio1.bitrate}} kbps</span>
+      </span>
+    </a>   
+  </div>
+</div>
+
+<div class="rt-welcome" ng-if="!player.nowPlaying.id">
+  <div class="rt-brand">
+    <a href ng-click="goHome()" class="rt-logo">
+      <span class="musicbar animate inline m-l-sm" style="width:20px;height:20px">
+        <span class="bar1 a1"></span>
+        <span class="bar2 a2"></span>
+        <span class="bar3 a3"></span>
+        <span class="bar4 a4"></span>
+        <span class="bar5 a5"></span>
+      </span>
+      Music Hall
+    </a>
+  </div>
+</div>
+
+<div style="position:relative;" ng-click="goHome()" class="rt-player-info" >
+  <img class="rt-player-cover" ng-src="{{player.nowPlaying.coverUrl || player.nowPlaying.createdBy.avatarUrl}}">
+  <canvas style="display:none;position:absolute;bottom:0;left:0;right:0" id="visualizer" width="300" height="50"></canvas>
+</div>
+<div class="rt-player-controls truncate">
+  <a class="rt-track-name rt-bold" title="Перейти к трэку {{player.nowPlaying.name}}" ui-sref="track.comments({ id: player.nowPlaying.id })" ng-if="!player.nowPlaying.bitrate">{{player.nowPlaying.name}}</a>
+  <a class="rt-track-name rt-bold" title="{{player.nowPlaying.name}}" href ng-if="player.nowPlaying.bitrate">{{player.nowPlaying.name}}</a>
+  <div class="rt-player-seek-bar row">
+    <small class="col-xs-2">{{player.nowPlaying.position | trackDuration}}</small>
+    <rt-track-seek id="rt-track-seek" class="rt-track-seek-wrapper col-xs m-v"></rt-track-seek>
+    <small class="col-xs-2">{{player.nowPlaying.duration | trackDuration}}</small>
+  </div>
+  <div class="rt-player-controls-btn">
+    <a href class="pull-left visible-xs visible-sm btn-lg btn" onclick="js:document.getElementById('player').classList.toggle('open')"><i class="icon-menu"></i></a>
+
+    <rt-volume class="rt-volume hidden-xs hidden-sm pull-left m-r m-t"></rt-volume>
+
+    <a href ng-click="player.prevPlay()" title="Назад" class="btn-next-prev"><i class="icon-rewind-outline"></i></a>
+    <a href ng-if="!player.nowPlaying.isPlaying" ng-click="player.play()" title="Возпроизвести" class="btn btn-lg btn-play"><i class="icon-play-1"></i></a>
+    <a href ng-if="player.nowPlaying.isPlaying" ng-click="player.pause()" title="Пауза" class="btn btn-lg btn-pause"><i class="icon-pause"></i></a>
+    <a href ng-click="player.nextPlay()" title="Вперед" class="btn-next-prev"><i class="icon-fast-fw-outline"></i></a>
+
+    <a href ng-click="player.repeat = !player.repeat" title="Повтор" ng-class="{'rt-muted': !player.repeat}" class="pull-right m-t"><i class="icon-retweet-1"></i></a>
+    <a href ng-click="player.shuffle = !player.shuffle" title="Вразброс" ng-class="{'rt-muted': !player.shuffle}" class="pull-right m-t"><i class="icon-shuffle-1"></i></a>
+  </div>
+</div>
+<div class="rt-player-playlist">
+  <div class="rt-player-playlist-name">
+    <h3 class="padder">
+      <div class="truncate">
+        <span ng-dblclick="togglePlaylistEdit()"><i class="icon-th-list-2 rt-pink"></i> {{player.playlist.name || 'Default'}}</span>
+      </div>
+      <a href class="pull-right rt-muted rt-player-playlist-name-clear" ng-click="player.playlist.tracks = []" title="Очистить плэйлист" ng-if="player.playlist.tracks.length>0"><i class="icon-cancel"></i></a>
+      <a href class="pull-right rt-muted rt-player-playlist-name-settings m-r" title="Сохранить плэйлист" ng-click="togglePlaylistEdit()" ng-if="player.playlist.tracks.length>0 && !isRadio(player.playlist.tracks)"><i class="icon-cog-alt"></i></a>
+    </h3>
+  </div>
+  <ul class="rt-player-playlist-items" dnd-list="player.playlist.tracks" ng-class="{'empty':player.playlist.tracks.length === 0}">
+    <li class="rt-player-playlist-item" 
+        ng-class="{'current': IfService.trackPlaying(track.id)}" 
+        ng-repeat="track in player.playlist.tracks" 
+        dnd-draggable="track"
+        dnd-moved="player.playlist.tracks.splice($index, 1)">
+      <a href ng-click="togglePlay(track, $index)">{{track.name}}</a>
+      <a href ng-click="player.remove(track.id)" class="rt-player-playlist-item-remove rt-muted small m-t"><i class="icon-cancel"></i></a>
+    </li>    
+  </ul>
+</div>
+<div class="rt-player-footer">
+  <a href class="pull-left" onclick="js:document.getElementById('rt-all-playlists').classList.add('open');"><i class="icon-list"></i> Плэйлисты</a>
+  <a href class="pull-right" onclick="js:document.getElementById('rt-history').classList.add('open');"><i class="icon-signal-1"></i> Радио <span class="tasix">new</span></a>
+</div>

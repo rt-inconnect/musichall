@@ -1,0 +1,60 @@
+<div class="panel bg-info clearfix">
+  <h4 class="font-thin padder">
+    <a href class="panel-toggle pull-right text-lt" ng-click="FilterService.toggleFilter()"><i class="fa fa-caret-down text-active"></i><i class="fa text" ng-class="{'fa-caret-down':!FilterService.filters.visible, 'fa-caret-left':FilterService.filters.visible}"></i></a>
+    <i class="fa fa-search"></i> Фильтр
+  </h4>
+
+  <form ng-submit="FilterService.doFilter()" class="clear bg-white" ng-if="!FilterService.filters.visible" style="padding:15px;">
+    <div class="form-group col-md-12">
+        <input type="text input-sm" class="form-control" id="name" ng-model="FilterService.filters.name" placeholder="по названию">
+    </div>
+    <div class="form-group col-md-6">
+        <input type="text" class="form-control input-sm" 
+          ng-model="FilterService.genreSelected"
+          ng-click="FilterService.genreSelected = ''"
+          typeahead="result as result.name for result in FilterService.searchGenre($viewValue)"
+          typeahead-on-select="FilterService.selectGenre()"
+          typeahead-append-to-body="true"
+          placeholder="по жанру">                
+    </div>
+    <div class="form-group col-md-6">
+        <input type="text" class="form-control input-sm" 
+          ng-model="FilterService.tagSelected"
+          ng-click="FilterService.tagSelected = ''"
+          typeahead="result as result.name for result in FilterService.searchTag($viewValue)"
+          typeahead-on-select="FilterService.selectTag()"
+          typeahead-append-to-body="true"
+          placeholder="по тэгам">
+    </div>
+
+    <div class="tags m-b-xs col-md-12" ng-if="FilterService.filters.genres.length > 0">
+      <a href ng-repeat="genre in FilterService.filters.genres" ng-click="FilterService.deleteGenre($index)"><span class="badge bg-primary">{{ '#' + genre.name }} x </span> </a>
+    </div>
+
+    <div class="tags m-b-xs col-md-12" ng-if="FilterService.filters.tags.length > 0">
+      <a href ng-repeat="tag in FilterService.filters.tags" ng-click="FilterService.deleteTag($index)"><span class="badge bg-info">{{ '#' + tag.name }} x </span> </a>
+    </div>
+
+    <div class="col-md-12">
+      Сортировать по:
+      <div class="radio i-checks" ng-repeat="sort in FilterService.filters.sorts">
+        <label>
+          <input type="radio" name="sort" ng-checked="sort.val === FilterService.filters.sort" ng-click="FilterService.changeFilterSort(sort)">
+          <i></i>
+          {{sort.name}}
+        </label>
+      </div>
+
+      <div class="checkbox i-checks">
+        <label>
+          <input type="checkbox" ng-model="FilterService.filters.listened">
+          <i></i>
+          Исключить прослушанные
+        </label>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-sm pull-right m-l-xs" title="Отфильтровать">Отфильтровать</button>
+    <a href ng-click="FilterService.clearFilter()" class="btn btn-default btn-sm pull-right" title="Очистить фильтр">Очистить фильтр</a>
+  </form>
+</div>

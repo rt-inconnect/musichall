@@ -1,0 +1,20 @@
+<div class="rt-notifies">
+  <div class="rt-comment media list-group-item" ng-repeat="notify in notifiesAll.items">
+    <span class="pull-left thumb-sm">
+      <img ng-src="{{notify.initiator.avatarUrl}}">
+    </span>
+    <span class="media-body block m-b-none truncate">
+      <span class="pull-right"><i class="icon-clock"></i> <i am-time-ago="notify.createdAt"></i></span>
+      <span class="rt-bold ng-binding">{{ displayNotifyText(notify) }}   </span><br>
+      <a ui-sref="user.tracks({user:notify.initiator.login})" class="rt-muted ng-binding">{{notify.initiator.login}}</a>
+    </span>
+  </div>
+</div>
+
+<div style="padding: 10px;">
+    <a class="btn-flat pull-right" ng-click="nextPage()" style="margin-bottom:20px;">
+      <span class="fa fa-chevron-circle-down"></span> Load more...
+    </a>
+
+    <div ng-show='busy'>Loading data...</div>
+</div>

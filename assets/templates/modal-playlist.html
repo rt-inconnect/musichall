@@ -1,0 +1,45 @@
+<div class="modal-body">
+    <a href title="Закрыть окно" class="close-modal" ng-click="close()"><i class="icon-cancel-circled2"></i></a>
+    <tabset justified="true" class="tabbable">
+    	<tab heading="В плейлист" ng-if="!!track" active="tabs[0].active">
+      	<div class="media" ng-repeat="playlist in playlists.items.modal">
+    		  <span class="pull-left thumb">
+    				<img ng-src="{{playlist.coverUrl || playlist.createdBy.avatarUrl}}">
+  				</span>
+      		<div class="media-body block m-b-none truncate">
+            <a href class="btn-flat pull-right" ng-click="PlaylistService.toPlaylist(playlist, track)" ng-if="!playlist.isAdded">
+              <span class="icon-left-open-outline"></span><span class="hidden-xs">Добавить</span>
+            </a>
+            <a href class="btn-flat pull-right" ng-click="PlaylistService.toPlaylist(playlist, track)" ng-if="playlist.isAdded">
+              <span class="icon-right-open-outline"></span><span class="hidden-xs">Удалить</span>
+            </a>
+      			<span class="rt-bold">{{playlist.name}}</span><br/>
+      			<span class="rt-muted">Кол-во трэков: {{playlist.numTracks}}</span><br/>
+      			<span class="rt-muted">Время проигрывания: {{playlist.totalTime}}</span>
+      		</div>
+      	</div>
+    	</tab>
+    	<tab heading="{{!playlist.id ? 'Создать новый' : playlist.name}}" active="tabs[1].active">
+        <span class="pull-left m-r thumb" ng-if="!!playlist.coverUrl">
+          <img ng-src="{{playlist.coverUrl}}">
+        </span>
+    		<form class="form clear">
+    			<div class="">
+    				<label for="name">Название</label>
+    				<input type="text" class="form-control" ng-model="playlist.name">
+    			</div>
+    			<div class="m-t">
+    				<label for="cover_url">Обложка</label>
+    				<input type="file" class="form-control" nv-file-select="" uploader="PlaylistService.uploader" options="{playlist:playlist}">
+    			</div>
+    		</form>
+        <div class="m-t-xl">
+          <a href ng-click="delete()" ng-if="playlist.id" class="pull-right">
+            <span class="icon-trash"></span> <span class="hidden-xs">Удалить плэйлист</span>
+          </a>
+          <a href ng-click="close()" class="btn-flat">Отменить</a>
+          <a href ng-click="create()" class="btn-flat">Сохранить</a>
+        </div>
+    	</tab>
+    </tabset>
+</div>

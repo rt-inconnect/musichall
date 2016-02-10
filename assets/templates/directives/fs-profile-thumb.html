@@ -1,0 +1,14 @@
+<div class="follow thumb-l">
+	<a ui-sref="user.tracks({user:user.login})">
+		<div class="info">
+			<span class="profile-login">{{user.login}}<span class="online" ng-class="{'active': user.isOnline}"><i class="icon-circle"></i></span></span> <br/>
+			<span class="small"><i class="icon-users"></i> {{user.numFollowers | kNumber}} / <i class="icon-heart-1"></i> {{user.numLikes | kNumber}}</span>
+		</div>
+		<img ng-src="{{user.avatarUrl}}" class="img-responsive">
+		<div class="enter" showonhoverparent ng-if="cur_user.id != user.id">
+			<a href class="btn-flat pull-left" title="Подписаться" ng-click="UserService.follow(user)" ng-class="{'active': user.isFollowed}">{{user.isFollowed ? "Подписан" : "Подписаться"}}</a>
+			<a ui-sref="user.tracks({user:user.login})" class="btn-flat pull-right" title="Перейти"><span class="icon-right-outline"></span></a>
+		</div>
+	</a>
+	<div class="online" ng-if="user.isOnline"></div>
+</div>

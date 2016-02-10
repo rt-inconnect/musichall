@@ -1,0 +1,11 @@
+<div class="rt-background rt-padding clear">
+	<fs-profile-thumb user="follower" ng-repeat="follower in followers.items.followers"></fs-profile-thumb>
+</div>
+
+<div style="padding: 10px;">
+    <a href class="btn-flat pull-right" ng-click="followers.getAll(followersOpts)" style="margin-bottom:20px;">
+      <span class="fa fa-chevron-circle-down"></span> Load more...
+    </a>
+
+    <div ng-show='followers.busy.followers'>Loading data...</div>
+</div>

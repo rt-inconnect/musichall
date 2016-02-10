@@ -1,0 +1,12 @@
+<div href class="rt-playlist-mini media list-group-item" ng-click="player.play(playlist.tracks[0], 0, playlist)">
+  <span class="pull-left thumb-sm">
+    <img ng-src="{{ playlist.coverUrl || playlist.createdBy.avatarUrl }}">
+  </span>
+  <span class="media-body block m-b-none truncate">
+		<a href class="small pull-right" ng-click="PlaylistService.delete(playlist, index, playlists)" ng-if="IfService.userEqual(playlist.createdBy.id)">
+		  <span class="fa fa-times"></span>
+		</a>
+    <span class="rt-bold">{{ playlist.name }}</span><br>
+    <span class="rt-muted">{{ playlist.numTracks | kNumber }} songs</span>
+  </span>
+</div>

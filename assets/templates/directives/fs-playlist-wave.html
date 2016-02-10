@@ -1,0 +1,125 @@
+<div class="rt-track-wave rt-playlist-wave clear">
+  <div class="rt-track-wave-background-wrapper" style="background-image:url({{IfService.playlistPlaying(playlist.id) ? (player.nowPlaying.coverUrl || player.nowPlaying.createdBy.avatarUrl) : (playlist.coverUrl || playlist.createdBy.avatarUrl)}})">
+    <div class="rt-track-wave-background-shadow"></div>
+  </div>
+  <div class="rt-track-wave-cover pull-left hidden-xs pos-rlt">
+      <div class="rt-uploading"><span class="rt-uploading-progress" ng-style="{width:playlist.coverProgress + '%'}"></span></div>
+      <a class="thumb-l" ui-sref="playlist({ id: playlist.id })">
+          <img class="media-object" ng-src="{{IfService.playlistPlaying(playlist.id) ? (player.nowPlaying.coverUrl || player.nowPlaying.createdBy.avatarUrl) : (playlist.coverUrl || playlist.createdBy.avatarUrl)}}">
+      </a>
+      <div class="m-t-xs" ng-if="IfService.userEqual(playlist.createdBy.id)" ng-if="!playlist.edit">
+          <a class="btn-flat" ng-click="toggleEdit()">
+              <i class="icon-list"></i>Настроить плэйлист
+          </a>
+      </div>
+      <input type="file" nv-file-select="" uploader="PlaylistService.uploader" options="{playlist:playlist}" style="display: none;" id="{{'file-playlist-'+playlist.id}}">
+      <div class="rt-playlist-actions center" ng-if="playlist.edit">
+          <a href class="btn-flat" title="Загрузить обложку" ng-click="uploadClick()">
+              <span class="icon-picture"></span> Обложка
+          </a>
+          <a class="btn-flat m-l-xs" ng-click="reset()" title="Сбросить"><span class="icon-cancel"></span></a>
+          <a class="btn-flat" ng-click="PlaylistService.save(playlist)" title="Сохранить"><span class="icon-ok"></span></a>
+      </div>
+  </div>
+
+  <div class="rt-track-wave-right clear">
+
+      <a class="btn btn-lg btn-play pull-left m-r" href ng-click="player.play( IfService.playlistPaused(playlist.id) ? player.nowPlaying : playlist.tracks[0], 0, playlist)" ng-if="!IfService.playlistPlaying(playlist.id)">
+          <span class="icon-play-1"></span>
+      </a>
+      <a class="btn btn-lg btn-pause pull-left m-r" href ng-click="player.pause()" ng-if="IfService.playlistPlaying(playlist.id)">
+          <span class="icon-pause"></span>
+      </a>
+      <div ng-if="!IfService.playlistPlaying(playlist.id)" class="truncate">
+          <small class="pull-right" am-time-ago="playlist.createdAt"></small>
+          <a ui-sref="playlist({ id: playlist.id })" class="font-bold"><span>{{ playlist.name }}</span> <span class="hidden-xs">({{ playlist.numTracks | kNumber }}<i class="icon-note"></i>)</span></a><br/>
+          <span fs-profile-popover="playlist.createdBy" class="profile" ng-if="playlist.createdBy.login">
+              <a ui-sref="user.tracks({user:fsProfilePopover.login})" class="small">{{ playlist.createdBy.login }}</a>
+          </span>
+          <span ng-if="playlist.createdBy.status == 'removed'"><a href class="small">Пользователь удален</a><br/></span>
+      </div>
+      <div ng-if="IfService.playlistPlaying(playlist.id)" class="truncate">
+          <small class="pull-right" am-time-ago="player.nowPlaying.createdAt"></small>
+          <a ui-sref="track.comments({ id: player.nowPlaying.id })"><span class="font-bold">{{ player.nowPlaying.name }}</span></a><br/>
+          <span fs-profile-popover="player.nowPlaying.createdBy" class="profile">
+              <a ui-sref="user.tracks({user:fsProfilePopover.login})" class="small">{{ player.nowPlaying.createdBy.login }}</a>
+          </span>
+      </div>
+
+      <canvas waveform ng-model="player.nowPlaying" ng-if="IfService.playlistEqual(playlist.id)"></canvas>
+      <canvas waveform ng-model="playlist.tracks[0]" ng-if="!IfService.playlistEqual(playlist.id)"></canvas>
+      <div class="clearfix"></div>
+
+      <div class="list-group no-border no-bg no-radius alt" style="margin-top:10px;" ng-if="!playlist.edit">
+          <a href class="list-group-item rt-player-playlist-item" 
+            ng-class="{'current': IfService.trackPlaying(track.id)}"  
+            ng-repeat="track in playlist.tracks | limitTo: limit || playlist.tracks.length" 
+            style="position:relative;" 
+            ng-click="IfService.trackPlaying(track.id)?player.pause():player.play(track, $index, playlist)">
+              <span class="pull-right">
+                  <i class="icon-play"></i> {{ track.numPlays | kNumber }}
+              </span>
+              {{ track.name }}
+          </a>
+      </div>
+      <a class="btn-flat pull-left m-t-l m-r" ui-sref="playlist({ id: playlist.id })" ng-if="limit" ng-show="!playlist.edit">
+        <i class="icon-right-outline"></i> Перейти
+      </a>
+
+      <a class="btn-flat pull-left m-t-l m-r" ng-click="PlaylistService.like(playlist)" ng-if="!playlist.isLiked" title="Like" ng-show="!playlist.edit">
+        <span class="icon-heart-1"></span><span class="hidden-xs">Like</span>
+      </a>
+
+      <a class="btn-flat pull-left m-t-l m-r active" ng-click="PlaylistService.like(playlist)" ng-if="playlist.isLiked" title="Like" ng-show="!playlist.edit">
+        <span class="icon-heart-1"></span><span class="hidden-xs">Like</span>
+      </a>
+
+      <a class="btn-flat pull-left m-t-l" ng-click="IfService.download('playlist', playlist.id)" href title="Скачать zip" ng-show="!playlist.edit">
+        <span class="icon-download-cloud"></span>
+      </a>
+
+      <div class="pull-right rt-track-stats m-r" ng-if="!playlist.edit">
+        <span class="icon-heart-2"></span>{{ playlist.numLikes | kNumber }}
+      </div>
+
+
+      <div class="onedit" style="margin-top:10px;" ng-if="playlist.edit" ui-tree="options">
+
+          <form class="rt-playlist-wave-search" role="form">
+            <div class="input-group">
+              <input type="text" class="form-control" 
+                  ng-model="playlist.track_selected"
+                  typeahead="strack as strack.name for strack in TrackQuery.search($viewValue, playlist.id)"
+                  typeahead-on-select="addToPlaylist()"
+                  placeholder="Чтобы добавить трэки в плэйлист воспользуйтесь поиском">
+            </div>
+          </form>
+
+          <ul class="list-group no-border no-bg no-radius alt tracks" style="margin-top:0px;" dnd-list="playlist.tracks" data-type="track">
+              <li class="list-group-item" href="#" ng-repeat="track in playlist.tracks" dnd-draggable="track" dnd-moved="playlist.tracks.splice($index, 1)">
+                  <span class="angular-ui-tree-handle">
+                      <i class="icon-menu"></i>
+                  </span>
+                  <span class="track-name">{{ track.name }}</span>
+                  <a href class="badge pull-right" ng-if="playlist.tracks.length > 1" ng-click="delete($index)">
+                      <i class="icon-trash"></i>
+                  </a>
+              </li>
+          </ul>
+          <a class="pull-right btn-flat m-t-l" ng-click="PlaylistService.delete(playlist, index, playlists)" ng-if="IfService.userEqual(playlist.createdBy.id)">
+            <span class="icon-trash"></span> Удалить <span class="hidden-xs">плэйлист</span>
+          </a>
+      </div>
+      <div class="visible-xs">
+          <div ng-if="IfService.userEqual(playlist.createdBy.id) && !playlist.edit">
+              <a class="btn-flat pull-left m-l-xs m-t-l" ng-click="toggleEdit()">
+                  <i class="icon-edit"></i>
+              </a>
+          </div>
+          <div ng-if="playlist.edit">
+              <a class="btn-flat pull-left m-t-l" ng-click="reset()">Отмена</a>
+              <a class="btn-flat pull-left m-l-xs m-t-l" ng-click="PlaylistSevice.save(playlist)"><span class="icon-ok"></span></a>                
+          </div>
+      </div>
+  </div>
+</div>

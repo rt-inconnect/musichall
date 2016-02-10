@@ -1,0 +1,56 @@
+<div class="rt-message-chat active-user" ng-class="{'open': isOpened }">
+  <div class="rt-chat-messages" ng-if="!$state.params.user" ng-include src="'/templates/message/allchat.html'"></div>
+  <div class="rt-chat-messages" ui-view ng-if="!!$state.params.user"></div>
+  <section class="rt-chatters">
+    <tabset justified="true" class="tabbable">
+      <tab active="tabs[0].active" select="goToChat()">
+        <tab-heading>
+          <i class="icon-chat-1"></i> Чат
+        </tab-heading>
+        <div class="rt-chatters-list">
+          <a href class="rt-chatter media truncate" ng-repeat="user in chat.onliners | orderObjectBy:'isOnline':true" ng-click="chatWith(user)">
+              <span class="online" ng-class="{'active': user.isOnline}">
+                <i class="icon-circle"></i>
+              </span>
+              <span class="pull-left thumb-sm">
+                <img ng-src="{{user.avatarUrl}}" alt="{{user.fullname}}">
+              </span>
+              <span class="media-body truncate">
+                <span>{{ user.login }}</span> <br/>
+                <small>{{ user.fullname }}</small>
+              </span>
+          </a>
+        </div>
+      </tab>
+      <tab active="tabs[1].active">
+        <tab-heading>
+          <i class="icon-mail-3"></i> Приват <span class="rt-notify-count animated fadeInDown" ng-if="messages.total>0">{{messages.total}}</span>
+        </tab-heading>
+        <header class="panel-heading" style="display:none;">
+          <input type="text" class="input-sm form-control" 
+              ng-model="qChatter"
+              ng-click="qChatter = ''"
+              typeahead="result as result.name for result in searchChatters($viewValue)"
+              typeahead-on-select="isOpened = false; goToChatter();"
+              typeahead-template-url="searchAllTpl.html"
+              placeholder="Поиск пользователей">
+        </header>
+        <div class="rt-chatters-list">
+          <a href class="rt-chatter media truncate" ng-repeat="user in messages.chatters | orderObjectBy:'lastActivity':true" ng-click="chatWith(user)" ng-class="{ active: $state.params.user == user.login }">
+              <span class="rt-notify-count" ng-if="user.total > 0">{{user.total}}</span>
+              <span class="online" ng-class="{'active': user.isOnline}">
+                <i class="icon-circle"></i>
+              </span>
+              <span class="pull-left thumb-sm">
+                <img ng-src="{{user.avatarUrl}}" alt="{{user.fullname}}">
+              </span>
+              <span class="media-body truncate">
+                <span>{{ user.login }}</span> <br/>
+                <small>{{ user.fullname }}</small>
+              </span>
+          </a>
+        </div>
+      </tab>
+    </tabset>
+  </section>
+</div>

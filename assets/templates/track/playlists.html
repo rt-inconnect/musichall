@@ -1,0 +1,13 @@
+<ul class="rt-playlists">
+    <li ng-repeat="playlist in playlists.items.trackplaylist">
+        <fs-playlist-wave playlist="playlist" playlists="playlists.items.trackplaylist" limit="3" index="$index"></fs-playlist-wave>        
+    </li>
+</ul>
+
+<div style="padding: 10px;">
+    <a href class="btn-flat pull-right" ng-click="playlists.getAll(playlistsOpts)" style="margin-bottom:20px;">
+      <span class="fa fa-chevron-circle-down"></span> Load more...
+    </a>
+
+    <div ng-show='playlists.busy.trackplaylist'>Loading data...</div>
+</div>

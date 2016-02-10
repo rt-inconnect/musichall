@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" class="app">
+  <head>
+    <base href="http://musichall.uz/" target="_self">
+    <meta charset="utf-8" />
+    <title><%- track.name %></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <link href="favicon.ico" rel="icon" type="image/x-icon" />
+
+    <link rel="stylesheet" href="/widget/app.css">
+    <script type="text/javascript">
+      var waveData = [<%- track.waveData %>];
+      var trackId = <%- track.id %>;
+      var trackOgg = '<%- track.fileOgg %>';
+    </script>
+    <script src="/js/dependencies/soundmanager2.js"></script>
+    <script src="/widget/waveform.js"></script>
+  </head>
+
+  <body>
+    <div class="rt-track-wave clear">
+      <div class="rt-track-wave-background-wrapper" style="background-image:url(<%- track.coverUrl || track.createdBy.avatarUrl %>)">
+        <div class="rt-track-wave-background-shadow"></div>
+      </div>
+
+      <a href="#" class="rt-track-wave-cover pull-left thumb-m hidden-xs pos-rlt" onclick="js:return false;">
+          <img src="<%- track.coverUrl %>">
+      </a>
+      <div class="rt-track-wave-right clear" id="container">
+
+        <a href class="btn btn-lg btn-play pull-left m-r" id="play">
+          <span class="icon-play-1"></span>
+        </a>
+        <a href class="btn btn-lg btn-pause pull-left m-r" id="pause" style="display:none;">
+          <span class="icon-pause"></span>
+        </a>
+
+        <div class="truncate">
+          <a href="/<%- track.createdBy.login %>/tracks" class="font-bold truncate" target="_blank"><%- track.createdBy.login %></a> <br/>
+          <a href="/track/<%- track.id %>/comments" target="_blank" class="truncate"><small class="truncate"><%- track.name %></small></a>
+        </div>
+
+        <canvas id="waveform"></canvas>
+
+
+      </div>
+    </div>
+    <script src="/widget/app.js"></script>
+  </body>
+</html>

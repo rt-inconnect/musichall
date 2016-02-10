@@ -1,0 +1,132 @@
+<div class="rt-profile clear">
+  <div class="rt-uploading"><span class="rt-uploading-progress" ng-style="{width:user.avatarProgress + '%'}"></span></div>
+  <div class="rt-track-wave-background-wrapper" style="background-image:url({{user.avatarUrl}})">
+    <div class="rt-track-wave-background-shadow"></div>
+  </div>
+
+  <div class="rt-profile-cover pull-left">
+    <a class="thumb-l hidden-xs" href>
+      <img ng-src="{{user.avatarUrl}}">
+    </a>    
+    <span class="online" ng-class="{'active': user.isOnline}" ng-if="$state.params.user && $state.params.user != cur_user.login">
+      <i class="icon-circle"></i>
+    </span>
+    <div class="hidden-xs hidden-sm" ng-if="IfService.isAdmin()">
+      <a href ng-click="UserService.delete(user)">
+        Удалить аккаунт <span class="icon-trash"></span>
+      </a>
+    </div>
+  </div>
+  <div class="rt-profile-right row">
+
+    <div ng-if="!user.edit" class="truncate col-xs-12 col-sm-6">
+      <h2 class="truncate">
+        {{user.login}}
+        <a href ng-click="user.edit = !user.edit" ng-if="IfService.userEqual(user.id)">
+          <span class="icon-edit"></span>
+        </a>        
+      </h2>
+
+      <h3 class="truncate">{{user.fullname}}</h3>
+      <div class="text-muted rt-profile-location truncate" ng-if="user.location"><i class="icon-location-outline"></i>{{user.location}}</div>
+      <a ui-sref="track.comments({ id: user.nowPlaying.id })" ng-if="user.nowPlaying" class="truncate">
+        <small class="text-muted"><i class="icon-headphones"></i> {{user.nowPlaying.name}}</small>
+      </a>
+      <small class="text-muted truncate"><i class="icon-retweet-2"></i> Последний визит: <span am-time-ago="user.updatedAt"></small>
+      <small class="text-muted truncate"><i class="icon-clock"></i> Всего минут загружено: {{user.summaryUploaded | minutesDuration}} <span ng-if="user.plan != 'unlimited'">/ {{PLAN[user.plan] | minutesDuration}}</span></small>
+
+      <a class="small" href ng-click="user.edit = !user.edit" ng-if="IfService.userEqual(user.id)">
+        <span class="icon-edit"></span> Редактировать профиль
+      </a>
+
+      <div class="rt-profile-stats truncate row">
+        <div class="col-xs"><i class="icon-music-1"></i> {{user.numTracks | kNumber}}</div>
+        <div class="col-xs bordered"><i class="icon-heart-1"></i> {{user.numLikes | kNumber}}</div>
+        <div class="col-xs"><i class="icon-users"></i> {{user.numFollowers | kNumber}}</div>
+      </div>
+
+      <div class="rt-profile-actions" ng-if="IfService.userEqual(user.id)">
+        <a href class="btn-flat" title="Установить тему Dark Theme" ng-click="changeTheme('theme-dark')" ng-class="{'active': currentTheme('theme-dark')}">Dark Theme</a>
+        <a href class="btn-flat" title="Установить тему Light Blue" ng-click="changeTheme('theme-blue')" ng-class="{'active': currentTheme('theme-blue')}">Light Blue</a>
+      </div>
+
+      <div class="rt-profile-actions" ng-if="$state.params.user && $state.params.user != cur_user.login">
+        <a href class="btn-flat" title="Подписаться" ng-click="UserService.follow(user)" ng-class="{'active': user.isFollowed}"><i ng-class="{'icon-user-add': !user.isFollowed, 'icon-user': user.isFollowed}"></i> {{user.isFollowed ? "Подписан" : "Подписаться"}}</a>
+        <a class="btn-flat" ui-sref="message.chat({ user: user.login })"><i class="icon-chat-empty"></i> <span class="rt-gotochat">Общаться</span></a>
+      </div>
+    </div>
+
+
+    <div class="rt-profile-mostplayed truncate col-xs-12 col-sm-6">
+      <h3>Интересная статистика</h3>
+      <small class="text-muted truncate">Любимый жанр: <a ui-sref="main.explore({genre: stats.genreId})">{{stats.genreName}}</a></small>
+      <small class="text-muted truncate">Лучшее за неделю: <a ui-sref="track.comments({ id: stats.weeklyId })">{{stats.weeklyName}}</a></small>
+      <small class="text-muted truncate">Лучшее за месяц: <a ui-sref="track.comments({ id: stats.monthlyId })">{{stats.monthlyName}}</a></small>
+      <small class="text-muted truncate">Лучшее за все время: <a ui-sref="track.comments({ id: stats.alltimeId })">{{stats.alltimeName}}</a></small>
+    </div>
+
+    <form ng-if="user.edit" class="col-xs-12 col-sm-6">
+      <ul class="parsley-error-list" ng-if="user.state === 'error'">
+        <li class="min">Такой логин уже существует.</li>
+      </ul>
+      <div class="form-group login-group">
+        <input class="form-control input-sm parsley-validated" type="text" ng-model="user.login" ng-blur="UserService.verify(user)" ng-class="{'parsley-error': user.state === 'error'}" placeholder="Логин">
+        <div class="loading" ng-if="user.state === 'loading'">
+          <div class="loading-bar"></div>
+          <div class="loading-bar"></div>
+          <div class="loading-bar"></div>
+          <div class="loading-bar"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input class="form-control input-sm" type="text" ng-model="user.fullname" placeholder="Реальное имя">
+      </div>
+      <div class="form-group">
+        <input class="form-control input-sm" type="text" ng-model="user.location" placeholder="Месторасположение">
+      </div>
+
+      <div class="form-actions">
+          <input id="rt-profile-upload" type="file" nv-file-select="" uploader="UserService.uploader" options="{user:user}" style="display: none;">
+          <a href class="btn-flat" onclick="document.getElementById('rt-profile-upload').click();" title="Сменить аватарку"><i class="icon-picture"></i>Аватар</a>
+          <a href class="btn-flat" ng-click="user.edit = false" title="Отменить редактирование"><i class="icon-cancel"></i></a>
+          <a href class="btn-flat" ng-click="UserService.save(user)" ng-disabled="user.state === 'loading' || user.state === 'error'"><i class="icon-ok"></i></a>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<ul class="rt-tabmenu nav navbar-nav clear rt-background">
+  <li ng-class="{ active: $state.includes('*.tracks') }">
+    <a ui-sref=".tracks">
+      <i class="icon-music"></i> 
+      <span class="hidden-xs" ng-class="{ 'hidden-md hidden-sm': !$state.includes('*.tracks') }">Трэки ({{user.numTracks | kNumber}})</span>
+    </a>
+  </li>
+  <li ng-class="{ active: $state.includes('*.likes') }">
+    <a ui-sref=".likes">
+      <i class="icon-heart-1"></i> 
+      <span class="hidden-xs" ng-class="{ 'hidden-md hidden-sm': !$state.includes('*.likes') }">Лайки ({{user.numTrackLikes | kNumber}})</span>
+    </a>
+  </li>
+  <li ng-class="{ active: $state.includes('*.followers') }">
+    <a ui-sref=".followers">
+      <i class="icon-users"></i> 
+      <span class="hidden-xs" ng-class="{ 'hidden-md hidden-sm': !$state.includes('*.followers') }">Подписчики ({{user.numFollowers | kNumber}})</span>
+    </a>
+  </li>
+  <li ng-class="{ active: $state.includes('*.follows') }">
+    <a ui-sref=".follows">
+      <i class="icon-user"></i> 
+      <span class="hidden-xs" ng-class="{ 'hidden-md hidden-sm': !$state.includes('*.follows') }">Подписан ({{user.numFollows | kNumber}})</span>
+    </a>
+  </li>
+  <li ng-class="{ active: $state.includes('*.playlists') }">
+    <a ui-sref=".playlists">
+      <i class="icon-list"></i> 
+      <span class="hidden-xs" ng-class="{ 'hidden-md hidden-sm': !$state.includes('*.playlists') }">Плэйлисты ({{user.numPlaylists | kNumber}})</span>
+    </a>
+  </li>
+</ul>
+
+<div class="rt-tabcontent2" ui-view></div>

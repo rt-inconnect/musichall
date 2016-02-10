@@ -1,0 +1,156 @@
+<script type="text/ng-template" id="searchAllTpl.html">
+    <a href class="search media">
+      <span class="pull-left thumb-sm">                        
+        <img ng-src="{{match.model.cover}}">
+        <i class="on b-black"></i>
+      </span>
+      <span class="media-body block m-b-none truncate">
+        <span bind-html-unsafe="match.model.name | typeaheadHighlight:query" class="qtitle"></span>
+        <i class="pull-right icon-{{match.model.type}} qtype"></i>
+      </span>
+    </a>
+</script>
+
+<div class="rt-brand aside hidden-xs hidden-sm header-item" style="visibility: hidden;">
+    <a href ng-click="goHome()" class="rt-logo">
+      <span class="musicbar animate inline m-l-sm" style="width:20px;height:20px">
+        <span class="bar1 a1"></span>
+        <span class="bar2 a2"></span>
+        <span class="bar3 a3"></span>
+        <span class="bar4 a4"></span>
+        <span class="bar5 a5"></span>
+      </span>
+      Music Hall
+    </a>
+</div>
+
+<form class="rt-search col-xs header-item" role="search">
+  <input id="search-input" type="text" class="form-control input-sm no-border" 
+      ng-focus="$parent.searchFocused = true"
+      ng-blur="$parent.searchFocused = false"
+      ng-model="$parent.qSelected"
+      ng-click="$parent.qSelected = ''; $parent.searchEnterClicked = false"
+      typeahead="result as result.name for result in searchAll($viewValue)"
+      typeahead-on-select="goToQ()"
+      typeahead-template-url="searchAllTpl.html"
+      typeahead-focus-first="false"
+      ng-keydown="searchEnterPress($event)"
+      placeholder="Поиск музыки, пользователей, плэйлистов...">
+  <a href class="btn" title="Расширенный поиск" ng-click="goToSearch()" ng-if="$parent.qSelected"><i class="icon-list"></i></a>
+</form>
+
+<input type="file" id="rt-track-upload" style="display: none;" nv-file-select="" uploader="trackUploader.uploader" multiple>
+<ul class="rt-topmenu nav navbar-nav header-item rt-interactive-bar" ng-if="isAuth()">
+  <li>
+    <a href ng-click="goHome()" title="На главную">
+      <i class="icon-home"></i>
+    </a>    
+  </li>
+  <li id="rt-track-upload-li">
+    <a href title="Загрузки" onclick="js:document.getElementById('rt-track-upload-li').classList.toggle('open');">
+      <i class="icon-upload-cloud"></i>
+      <span class="rt-notify-count animated fadeInDown" ng-if="trackUploader.uploader.queue.length > 0">{{trackUploader.uploader.queue.length}}</span>
+    </a>
+    <div class="dropdown dropdown-panel animated fadeInDown">
+      <span class="arrow right"></span>
+      <div class="panel-heading">Очередь загрузок</div>
+
+      <div class="panel-body">
+        <div class="media list-group-item" ng-if="trackUploader.uploadItem.isUploading">
+          <div class="media-body block m-b-none">
+            <div class="rt-item-upload">
+              <span class="rt-item-upload-status">{{trackUploader.uploadItem.uploadStatus}}</span>
+              <div class="rt-uploading" style="height:10px;">
+                <span class="rt-uploading-progress" ng-style="{width:trackUploader.uploadItem.allProgress + '%'}"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="media list-group-item" ng-repeat="item in trackUploader.uploader.getNotUploadedItems()">
+          <div class="media-body block m-b-none">
+            <span>{{item.file.name}}</span>
+          </div>
+        </div>
+
+        <a ui-sref="track.comments({ id: snotify.track.id })" class="media list-group-item" ng-repeat="snotify in snotifies">
+          <span class="pull-left thumb-sm" ng-if="snotify.track.coverUrl">
+            <img ng-src="{{snotify.track.coverUrl}}">
+          </span>
+          <span class="media-body block m-b-none">
+            {{ snotify.track.name + snotify.text }}<br>
+            <small class="rt-muted pull-right">{{ snotify.track.createdAt | date:'dd.MM.yyyy HH:mm:ss' }}</small>
+          </span>
+        </a>        
+      </div>
+
+      <div class="panel-footer">
+        <a href title="Загрузить трэк" onclick="document.getElementById('rt-track-upload').click();">Загрузить трэк</a>
+        <a onclick="document.getElementById('rt-track-upload').click();" class="pull-right"><i class="icon-upload-cloud"></i></a>
+      </div>
+    </div>    
+  </li>
+  <li>
+    <a ui-sref="message" title="Чат / Сообщения">
+      <i class="icon-chat-1 animated" id="imessages"></i>
+      <span class="rt-notify-count animated fadeInDown" ng-if="messages.total>0">{{messages.total}}</span>
+    </a>
+  </li>
+  <li onclick="js:this.classList.toggle('open');" ng-click="readNotifies()">
+    <a href title="Уведомления">
+      <i class="icon-bell"></i>
+      <span class="rt-notify-count animated fadeInDown" ng-if="notifies.count>0">{{notifies.count}}</span>
+    </a>
+    <div class="dropdown dropdown-panel animated fadeInDown">
+      <span class="arrow right"></span>    
+      <div class="panel-heading">Последние уведомления</div>
+
+      <div class="panel-body">
+        <a href class="media list-group-item" ng-repeat="notify in notifies.items">
+          <span class="pull-left thumb-sm">
+            <img ng-src="{{notify.initiator.avatarUrl}}">
+          </span>
+          <span class="media-body block m-b-none">
+            {{ displayNotifyText(notify) }}<br>
+            <small class="rt-muted pull-right">{{ notify.createdAt | date:'dd.MM.yyyy HH:mm:ss' }}</small>
+          </span>
+        </a>
+      </div>
+
+      <div class="panel-footer">
+        <a ui-sref="notifies">Посмотреть все уведомления</a>
+        <a ui-sref="notifies" class="pull-right"><i class="icon icon-list"></i></a>
+      </div>
+    </div>
+  </li>
+</ul>
+
+<ul class="rt-topmenu nav navbar-nav header-item" ng-if="isAuth()">
+  <li onclick="js:this.classList.toggle('open');">
+    <a href class="hidden-xs thumb-sm pull-left rt-topmenu-cover"><img ng-src="{{cur_user.avatarUrl}}"></a>
+    <a href class="hidden-xs truncate rt-topmenu-login">{{cur_user.login}}<i class="icon-cog-alt"></i></a>
+    <a href class="visible-xs"><i class="icon-cog-alt"></i></a>
+    <ul class="dropdown dropdown-menu animated fadeInDown">
+      <li><span class="arrow top"></span><a ui-sref="profile.tracks"><i class="icon-music"></i> Трэки</a></li>
+      <li><a ui-sref="profile.likes"><i class="icon-heart-1"></i> Лайки</a></li>
+      <li><a ui-sref="profile.followers"><i class="icon-users"></i> Подписчики</a></li>
+      <li><a ui-sref="profile.follows"><i class="icon-user"></i> Подписан</a></li>
+      <li><a ui-sref="profile.playlists"><i class="icon-list"></i> Плэйлисты</a></li>
+      <li class="divider"></li>
+      <li><a href onclick="location.href = '/api/user/logout'"><i class="icon-logout"></i> Выйти</a></li>
+    </ul>
+  </li>
+</ul>
+
+<ul class="rt-topmenu nav navbar-nav header-item" ng-if="!isAuth()">
+  <li>
+    <a href ng-click="goHome()" title="На главную">
+      <i class="icon-home"></i> Главная
+    </a>    
+  </li>
+  <li>
+    <a ui-sref="login" title="Авторизоваться через Mail.ru">
+      <i class="icon-login"></i> Авторизация
+    </a>
+  </li>
+</ul>

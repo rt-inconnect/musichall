@@ -1,0 +1,38 @@
+<div class="fs-track-mini">
+  <a href class="thumb pull-left m-r">
+    <img ng-src="{{track.coverUrl || track.createdBy.avatarUrl}}">
+  </a>
+  <div class="clear">
+    <span fs-profile-popover="track.createdBy" class="profile">
+        <a href="#{{track.createdBy.login}}/tracks" class="small">{{ track.createdBy.login }}</a>
+    </span>
+    <a ui-sref="track.comments({ id: track.id })" class="text-info">{{ track.name }}</a> <br/>
+    <span class="small block text-muted pull-left">
+      <span><i class="fa fa-play"></i> {{track.numPlays | kNumber}}</span> / 
+      <span><i class="fa fa-heart"></i> {{track.numLikes | kNumber}}</span> /
+      <span><i class="fa fa-comments"></i> {{track.numComments | kNumber}}</span>
+    </span>
+  </div>
+  <div class="play-panel" showonhoverparent>
+
+    <a class="btn btn-primary btn-sm" href ng-click="player.play(track, index, tracks)" ng-if="!track.isPlaying">
+      <span class="fa fa-play"></span>
+    </a>
+
+    <a class="btn btn-danger btn-sm" href ng-click="player.pause()" ng-if="track.isPlaying">
+      <span class="fa fa-pause"></span>
+    </a>
+
+    <a class="btn btn-default btn-sm" ng-click="TrackService.like(track)" ng-if="!track.isLiked">
+      <i class="fa fa-heart"></i>
+    </a>
+
+    <a class="btn btn-danger btn-sm active" ng-click="TrackService.like(track)" ng-if="track.isLiked">
+      <i class="fa fa-heart"></i>
+    </a>
+
+    <a class="btn btn-default btn-sm" ng-click="TrackService.toPlaylist(track)">
+      <span class="icon-playlist icon"></span>
+    </a>
+  </div>
+</div>

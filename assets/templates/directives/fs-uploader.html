@@ -1,0 +1,16 @@
+<div class="panel bg-info" style="padding:15px;">
+  <h4 class="font-thin">
+    <i class="icon icon-cloud-upload"></i> Загрузить трэк
+  </h4>
+  <p>Добавьте свою музыку чтобы поделиться со всеми</p>
+  <input type="file" nv-file-select="" uploader="trackUploader.uploader" multiple>
+
+  <div ng-if="trackUploader.uploadItem.isUploading">
+    <div class="progress m-t-sm">
+      <div class="progress-bar bg-primary" ng-style="{width:trackUploader.uploadItem.uploadProgress / 2 + '%'}"></div>
+      <div class="progress-bar bg-success" ng-style="{width:trackUploader.uploadItem.convertProgress / 2 + '%'}"></div>
+    </div>
+    <div class="">{{trackUploader.uploadItem.uploadStatus}}</div>
+  </div>
+
+</div>

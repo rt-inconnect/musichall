@@ -1,0 +1,25 @@
+<div class="rt-popular row">
+  <div class="rt-popular-content col-xs-12 col-sm-9">
+    <div class="rt-popular-tracks">
+      <h3 class="rt-popular-tracks-header">
+        Лучшее за
+        <a href ng-click="toggleInterval('weekly')" ng-class="{'active':popularOpts.criteria.interval == 'weekly'}">неделю</a> /
+        <a href ng-click="toggleInterval('monthly')" ng-class="{'active':popularOpts.criteria.interval == 'monthly'}">месяц</a> /
+        <a href ng-click="toggleInterval('yearly')" ng-class="{'active':popularOpts.criteria.interval == 'yearly'}">год</a> /
+        <a href ng-click="toggleInterval('alltime')" ng-class="{'active':popularOpts.criteria.interval == 'alltime'}">все время</a>
+      </h3>
+      <div class="rt-track-list" dnd-list="tracks.items.popular" dnd-disable-if="true">
+        <fs-track-wave tracks="tracks.items.popular" track="track" index="$index" ng-repeat="track in tracks.items.popular"></fs-track-wave>
+      </div>     
+    </div>
+  </div>
+  <div class="rt-popular-right col-xs-12 col-sm-3">
+    <!-- <div class="rt-popular-users">
+      <fs-profile-thumb-small user="user" ng-repeat="user in users.items.popular"></fs-profile-thumb-small>
+    </div> -->
+    <ul class="rt-popular-right-genres">
+      <li ng-class="{'active':!popularOpts.criteria.genre || popularOpts.criteria.genre == 0}" class="truncate"><a ui-sref="main.popular({genre: 0})">Все жанры</a></li>
+      <li ng-class="{'active':popularOpts.criteria.genre == genre.id}" ng-repeat="genre in genres" class="truncate"><a ui-sref="main.popular({genre: genre.id})">{{genre.name}}</a></li>
+    </ul>
+  </div>
+</div>

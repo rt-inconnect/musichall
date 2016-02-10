@@ -1,0 +1,10 @@
+  <a href title="Громкость" ng-click="player.mute()">
+    <i class="icon-volume-up" ng-if="player.volume >= 50 && !player.muted"></i>
+    <i class="icon-volume-down" ng-if="player.volume < 50 && !player.muted"></i>
+    <i class="icon-volume-off-1" ng-if="player.muted"></i>
+  </a>
+  <div class="rt-volume-wrapper">
+    <div class="rt-volume-out" ng-click="player.changeVolume($event)">
+      <div class="rt-volume-in" ng-style="{height : 100 - player.volume + '%'}"></div>
+    </div>
+  </div>

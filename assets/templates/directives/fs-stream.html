@@ -1,0 +1,16 @@
+<div class="rt-stream">
+  <div class="rt-stream-header truncate">
+    <a href class="pull-left thumb-sm m-r">
+      <img ng-src="{{stream.initiator.avatarUrl}}">
+    </a>
+    <a ui-sref="user.tracks({user:stream.initiator.login})" class="font-bold truncate">{{ stream.initiator.login }}</a> {{ action }}
+    <a ng-if="type == 'track'" ui-sref="track.comments({ id: stream.id })">{{ stream.name }}</a>
+    <a ng-if="type == 'playlist'" ui-sref="playlist({ id: stream.id })">{{ stream.name }}</a>
+    <div class="small" am-time-ago="stream.initDate"></div>
+  </div>
+  <div class="rt-stream-body">
+    <fs-playlist-wave ng-if="type == 'playlist'" playlist="stream" playlists="streams" limit="3" index="index"></fs-playlist-wave>
+
+    <fs-track-wave ng-if="type == 'track'" track="stream" tracks="streams" index="index"><fs-track-wave>
+  </div>
+<div>

@@ -1,0 +1,26 @@
+<div class="rt-track-wave grabbable clear" ng-class="{'playing':IfService.trackPlaying(track.id)}" dnd-draggable="track">
+  <div class="rt-track-wave-background-wrapper" style="background-image:url({{track.coverUrl || track.createdBy.avatarUrl}})">
+    <div class="rt-track-wave-background-shadow"></div>
+  </div>
+  <div class="rt-track-wave-cover pull-left thumb-l hidden-xs pos-rlt">
+    <a href>
+        <img ng-src="{{ track.coverUrl || track.createdBy.avatarUrl }}">
+    </a>
+    <div class="rt-stream-track-play">
+      <a class="btn btn-lg btn-play pull-left m-r" href ng-click="player.play(track, index, tracks)" ng-if="IfService.trackPaused(track.id)">
+          <span class="icon-play-1"></span>
+      </a>
+      <a class="btn btn-lg btn-pause pull-left m-r" href ng-click="player.pause()" ng-if="IfService.trackPlaying(track.id)">
+          <span class="icon-pause"></span>
+      </a>
+    </div>
+  </div>
+  <div class="rt-track-wave-right clear" ng-show="!track.edit">
+      <canvas waveform ng-model="track" class="rt-track-wave-canvas"></canvas>
+
+      <div class="clear">
+      </div>
+
+  </div>
+  <div class="clear"></div>
+</div>

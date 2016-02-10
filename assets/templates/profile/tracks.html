@@ -1,0 +1,11 @@
+<div class="rt-track-list" dnd-list="tracks.items.added" dnd-disable-if="true">
+  <fs-track-wave tracks="tracks.items.added" track="track" index="$index" ng-repeat="track in tracks.items.added"></fs-track-wave>
+</div>
+
+<div style="padding: 10px;">
+    <a href class="btn-flat pull-right" ng-click="tracks.getAll(addedOpts)" style="margin-bottom:20px;">
+      <span class="fa fa-chevron-circle-down"></span> Load more...
+    </a>
+
+    <div ng-show='tracks.busy.added'>Loading data...</div>
+</div>

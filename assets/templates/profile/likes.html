@@ -1,0 +1,18 @@
+<div class="rt-track-list" dnd-list="tracks.items.likes" dnd-disable-if="true">
+
+	<div ng-repeat="like in tracks.items.likes">
+    <fs-playlist-wave ng-if="like.xtype == 'playlistliked'" playlist="like" playlists="tracks.items.likes" limit="3" index="$index"></fs-playlist-wave>
+
+    <fs-track-wave ng-if="like.xtype == 'trackliked'" track="like" tracks="tracks.items.likes" index="$index"><fs-track-wave>
+
+	</div>
+
+</div>
+
+<div style="padding: 10px;">
+    <a class="btn-flat pull-right" ng-click="tracks.getAll(likesOpts)" style="margin-bottom:20px;">
+      <span class="fa fa-chevron-circle-down"></span> Load more...
+    </a>
+
+    <div ng-show='tracks.busy.likes'>Loading data...</div>
+</div>

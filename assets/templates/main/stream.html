@@ -1,0 +1,10 @@
+<div class="rt-track-list" dnd-list="tracks.items.stream" dnd-disable-if="true">
+  <fs-stream streams="tracks.items.stream" stream="stream" index="$index" ng-repeat="stream in tracks.items.stream"></fs-stream>
+</div>
+<div style="padding: 10px;">
+    <a href class="btn-flat pull-right" ng-click="tracks.getAll(streamOpts)" style="margin-bottom:20px;">
+      <span class="fa fa-chevron-circle-down"></span> Load more...
+    </a>
+
+    <div ng-show='tracks.busy.stream'>Loading data...</div>
+</div>

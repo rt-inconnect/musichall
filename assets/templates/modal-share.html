@@ -1,0 +1,36 @@
+<div class="modal-body">
+    <a href title="Закрыть окно" class="close-modal" ng-click="close()"><i class="icon-cancel-circled2"></i></a>
+    <tabset justified="true" class="tabbable">
+    	<tab heading="Разместить на сайте">
+        <iframe width="100%" scrolling="no" frameborder="no" height="188" src="{{widget}}"></iframe>
+        <p class="m">
+          Хотите поставить виджет к себе на сайт? Скопируйте код ниже и установите его у себя.
+        </p>
+        <textarea rows="3" class="task-title-edit" ng-bind="widgetUrl" readonly="readonly" style="width:100%"></textarea>
+    	</tab>
+      <tab heading="Поделиться в соц.сетях">
+        <div class="share-preview clear">
+          <a href class="thumb-l pull-left m-r">
+            <img ng-src="{{track.coverUrl}}">
+          </a>
+          <div>
+            <p class="bold">{{track.name}}</p>
+            <p>Музыкальная социальная сеть в TAS-IX</p>
+          </div>
+          <p id="social-buttons">
+            <a href class="btn btn-sm btn-info" ng-click="share('twitter')" title="Поделиться в Twitter"><i class="icon-twitter-bird"></i></a>
+            <a href class="btn btn-sm btn-primary" ng-click="share('facebook')" title="Поделиться в Facebook"><i class="icon-facebook-rect"></i></a>
+            <a href class="btn btn-sm btn-danger" ng-click="share('google')" title="Поделиться в Google+"><i class="icon-googleplus-rect-1"></i></a>
+            <a href class="btn btn-sm btn-danger" ng-click="share('vk')" title="Поделиться в Vkontakte"><i class="icon-vkontakte-rect"></i></a>
+            <a href class="btn btn-sm btn-danger" ng-click="share('mailru')" title="Поделиться в Моем Мире"><i class="icon-mailru"></i></a>
+            <a href class="btn btn-sm btn-danger" ng-click="share('odnoklassniki')" title="Поделиться в Одноклассниках"><i class="icon-odnoklassniki-rect"></i></a>
+          </p>
+          <div class="form-group">
+            <label for="url">Ссылка</label>
+            <input id="url" type="text" ng-value="url" readonly="readonly" style="width:100%">
+          </div>          
+        </div>
+
+      </tab>
+    </tabset>
+</div>

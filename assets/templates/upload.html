@@ -1,0 +1,88 @@
+<div class="container">
+    <div class="form upload">
+
+        <h2>Добавьте свою музыку чтобы поделиться со всеми</h2>
+        <div class="file-input-wrapper btn btn-primary btn-lg m-b">
+            <span>Выберите файл:</span>
+            <input type="file" nv-file-select="" uploader="trackUploader.uploader" multiple>
+        </div>
+
+    </div>
+
+    <section class="panel" 
+      ng-class="{
+        'panel-default':item.state === 'uploading', 
+        'panel-primary':item.state === 'completed',
+        'panel-success':item.state === 'updated',
+        'panel-danger' :item.state === 'removed'
+      }" 
+      ng-repeat="item in trackUploader.uploadItems">
+
+      <header class="panel-heading font-bold">
+        {{ item.uploadStatus }}
+        <span ng-if="item.uploadProgress != 100">{{item.uploadProgress + '%'}}</span>
+        <span ng-if="item.convertProgress && item.convertProgress != 100">{{item.convertProgress + '%'}}</span>
+      </header>
+      <div class="panel-body">
+
+        <div class="progress m-t-sm" ng-if="item.isUploading">
+          <div class="progress-bar bg-primary" ng-style="{width:item.uploadProgress / 2 + '%'}"></div>
+          <div class="progress-bar bg-success lter" ng-style="{width:item.convertProgress / 2 + '%'}"></div>
+        </div>
+
+        <div class="pull-left m-r-sm" style="text-align: center;">
+          <div class="thumb-lg"><img ng-src="{{ item.track.coverUrl || no_cover }}" class="m-b-sm"></div><br/>
+          <div class="file-input-wrapper btn btn-default" ng-if="!item.isUploading && item.state !== 'removed'">
+              <span class="fa fa-picture-o"></span>
+              <span>Загрузить</span>
+              <input type="file" nv-file-select="" uploader="TrackService.uploader" options="{track:item.track}">
+          </div>          
+        </div>
+
+        <div class="clear">
+          <form class="form" ng-submit="TrackService.save(item.track)">
+            <fieldset ng-disabled="item.isUploading">
+              <div class="form-group">
+                <label>Название трэка</label>
+                <input type="text" class="form-control" ng-model="item.track.name">
+              </div>
+
+              <div class="form-group col-md-6">
+                  <label for="genre" class="control-label">Жанр</label>
+                  <input type="text" class="form-control" 
+                    ng-model="TrackService.genreSelected"
+                    ng-click="TrackService.genreSelected = ''"
+                    typeahead="result as result.name for result in TrackService.searchGenre($viewValue)"
+                    typeahead-on-select="TrackService.selectGenre(item.track)"
+                    typeahead-append-to-body="true"
+                    placeholder="{{item.track.genreId.name}}">                
+              </div>
+              <div class="form-group col-md-6">
+                  <label for="tag" class="control-label">Тэги</label>
+                  <input type="text" class="form-control" 
+                    ng-model="TrackService.tagSelected"
+                    ng-click="TrackService.tagSelected = ''"
+                    typeahead="result as result.name for result in TrackService.searchTag($viewValue)"
+                    typeahead-on-select="TrackService.selectTag(item.track)"
+                    typeahead-append-to-body="true"
+                    typeahead-focus-first="false"
+                    placeholder=""
+                    ng-keydown="TrackService.createTag($event)">                
+              </div>
+
+              <div class="tags m-t-xs m-b pull-right">
+                <a href ng-repeat="tag in item.track.tags" ng-click="TrackService.deleteTag($index, item.track, tag)"><span class="badge bg-genre">{{ '#' + tag.name }} x </span> </a>
+              </div>
+              
+              <div class="form-group">
+                <a href class="btn btn-default" ng-click="TrackService.delete(item.track, $index, trackUploader.uploadItems)"><span class="fa fa-times"></span> Отмена</a>
+                <button type="submit" class="btn btn-primary"><span class="fa fa-check"></span> Сохранить</button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+</div>

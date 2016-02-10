@@ -1,0 +1,36 @@
+<header class="rt-tabs">
+  <ul class="rt-tabmenu nav navbar-nav" id="rt-tabmenu">
+    <li ng-class="{ active: $state.includes('*.stream') }" ng-if="isAuth()">
+      <a ui-sref=".stream">
+        <i class="icon-buffer"></i> 
+        <span class="hidden-xs">Лента</span>
+      </a>
+    </li>
+    <li ng-class="{ active: $state.includes('*.popular') }">
+      <a ui-sref=".popular">
+        <i class="icon icon-crown" style="float:left;margin-top:1px;"></i> 
+        <span class="hidden-xs">Лучшее</span>
+      </a>
+    </li>
+    <li ng-class="{ active: $state.includes('*.explore') }">
+      <a ui-sref=".explore">
+        <i class="icon-upload-cloud"></i> 
+        <span class="hidden-xs">Последние</span>
+      </a>
+    </li>
+    <li ng-class="{ active: $state.includes('*.recommended') }" style="display:none;">
+      <a ui-sref=".recommended">
+        <i class="icon-heart-1"></i> 
+        <span class="hidden-xs">Рекомендуем</span>
+      </a>
+    </li>
+  </ul>
+  <div class="pull-right rt-switch" ng-if="$state.includes('*.explore')">
+    <a href ng-click="switchTrackMode(true)" ng-class="{'active':isThumb}"><i class="icon-th-thumb"></i></a>
+    <a href ng-click="switchTrackMode(false)" ng-class="{'active':!isThumb}"><i class="icon-th-list-1"></i></a>
+  </div>
+</header>
+
+<div class="rt-tabcontent" ui-view>
+
+</div>

@@ -1,0 +1,137 @@
+<div class="rt-track-wave grabbable clear" ng-class="{'playing':IfService.trackPlaying(track.id)}" dnd-draggable="track" dnd-disable-if="track.edit">
+  <div class="rt-track-wave-background-wrapper" style="background-image:url({{track.coverUrl || track.createdBy.avatarUrl}})">
+    <div class="rt-track-wave-background-shadow"></div>
+  </div>
+  <div class="rt-track-wave-cover pull-left thumb-l hidden-xs pos-rlt">
+    <div class="rt-uploading"><span class="rt-uploading-progress" ng-style="{width:track.coverProgress + '%'}"></span></div>
+    <a href>
+        <img ng-src="{{ track.coverUrl || track.createdBy.avatarUrl }}">
+    </a>
+    <div ng-if="IfService.canEdit(track.createdBy.id)" class="rt-track-update">
+      <a class="btn-flat pull-left" ng-click="track.edit = !track.edit" href>
+          Редактировать
+      </a>
+      <a class="btn-flat pull-right" ng-click="TrackService.delete(track, index, tracks)" href>
+          <span class="icon-trash"></span>
+      </a>
+    </div>
+  </div>
+  <div class="rt-track-wave-right clear" ng-show="!track.edit">
+      <div class="pull-right">
+          <small class="pull-right" am-time-ago="track.createdAt"></small> <br/>
+          <a ui-sref="main.explore({genre: track.genreId.id})"><small class="badge bg-genre pull-right">{{ track.genreId.name }}</small></a>
+      </div>
+      <a class="btn btn-lg btn-play pull-left m-r" href ng-click="player.play(track, index, tracks)" ng-if="IfService.trackPaused(track.id)">
+          <span class="icon-play-1"></span>
+      </a>
+      <a class="btn btn-lg btn-pause pull-left m-r" href ng-click="player.pause()" ng-if="IfService.trackPlaying(track.id)">
+          <span class="icon-pause"></span>
+      </a>
+      <div class="truncate">
+          <a ui-sref="track.comments({ id: track.id })" title="{{ track.name }}"><span class="font-bold truncate">{{ track.name }}</span></a><br/>
+          <div fs-profile-popover="track.createdBy" class="profile">
+              <a ui-sref="user.tracks({user:fsProfilePopover.login})" class="small truncate">{{ track.createdBy.login }}</a>
+          </div>
+      </div>
+
+      <canvas waveform ng-model="track" class="rt-track-wave-canvas"></canvas>
+
+      <div class="rt-track-wave-comment">
+        <form class="form" ng-submit="TrackService.comment(track)" ng-if="cur_user.id && IfService.trackEqual(track.id) || comment">
+            <div class="input-group">
+                <span class="rt-track-wave-comment-author thumb-xs"><img ng-src="{{ cur_user.avatarUrl }}"></span>
+                <input type="text" class="col-xs rt-track-wave-comment-input" placeholder="Написать комментарий" ng-model="track.content">
+            </div>
+        </form>
+      </div>
+
+      <div class="clear">
+        <div class="pull-left rt-track-actions">
+
+          <a class="btn-flat" ng-click="TrackService.like(track)" ng-if="!track.isLiked" title="Like">
+            <span class="icon-heart-1"></span><span class="hidden-xs">Like</span>
+          </a>
+
+          <a class="btn-flat active" ng-click="TrackService.like(track)" ng-if="track.isLiked" title="Like">
+            <span class="icon-heart-1"></span><span class="hidden-xs">Like</span>
+          </a>
+
+          <a class="btn-flat" ng-click="TrackService.toPlaylist(track)" title="В плэйлист">
+            <span class="icon-list-add"></span><span class="hidden-xs">В плэйлист</span>
+          </a>
+
+          <a class="btn-flat" href ng-click="TrackService.share(track)" title="Поделиться в соц.сетях или получить код виджета и разместить у себя на сайте">
+            <span class="icon-share-2"></span><span class="hidden-xs hidden-sm hidden-md">Поделиться</span>
+          </a>
+
+          <a class="btn-flat" href ng-click="IfService.download('track', track.id)" title="Скачать">
+            <span class="icon-download-cloud"></span>
+          </a>
+
+        </div>
+
+        <div class="pull-right rt-track-stats">
+
+          <span class="icon-play"></span>{{ track.numPlays | kNumber }} |
+          <a ui-sref="track.likes({ id: track.id })"><span class="icon-heart-2"></span>{{ track.numLikes | kNumber }}</a> |
+          <a ui-sref="track.comments({ id: track.id })"><span class="icon-chat"></span>{{ track.numComments | kNumber }}</a>
+        </div>
+      </div>
+
+
+
+      <div class="tags m-t-xs pull-right" ng-if="tags">
+        <a ui-sref="main.explore({tag: tag.name})" ng-repeat="tag in track.tags" ng-click="deleteTag($index)"><span class="badge bg-genre">{{ '#' + tag.name }}</span> </a>
+      </div>
+
+  </div>
+  <form ng-submit="TrackService.save(track)" class="rt-track-wave-form row" ng-if="track.edit && IfService.canEdit(track.createdBy.id)">
+      <legend>Редактирование трэка</legend>
+      <div class="form-group col-xs-12">
+          <label for="name" class="control-label">Заголовок</label>
+          <input type="text" class="form-control" id="name" ng-model="track.name">
+      </div>
+      <div class="form-group col-xs-6">
+          <label for="genre" class="control-label">Жанр</label>
+          <input type="text" class="form-control" 
+            ng-model="TrackService.genreSelected"
+            ng-click="TrackService.genreSelected = ''"
+            typeahead="result as result.name for result in TrackService.searchGenre($viewValue)"
+            typeahead-on-select="TrackService.selectGenre(track)"
+            typeahead-append-to-body="true"
+            placeholder="{{track.genreId.name}}">                
+      </div>
+      <div class="form-group col-xs-6">
+          <label for="tag" class="control-label">Тэги</label>
+          <input type="text" class="form-control" 
+            ng-model="TrackService.tagSelected"
+            ng-click="TrackService.tagSelected = ''"
+            typeahead="result as result.name for result in TrackService.searchTag($viewValue)"
+            typeahead-on-select="TrackService.selectTag(track)"
+            typeahead-append-to-body="true"
+            typeahead-focus-first="false"
+            placeholder=""
+            ng-keydown="TrackService.createTag($event, track)">                
+      </div>
+      <div class="form-group col-xs-12">
+          <label for="cover_url" class="control-label">Загрузить обложку</label>
+          <input type="file" id="cover_url" nv-file-select="" uploader="TrackService.uploader" options="{track:track}">
+      </div>
+      <div class="rt-track-images form-group col-xs-12">
+        <p>Или выбрать из существующих</p>
+        <a class="thumb m-l-xs" href ng-repeat="cover in track.covers" ng-click="track.coverUrl = cover">
+          <img ng-src="{{ cover }}">
+        </a>
+      </div>    
+
+      <div class="rt-track-tags form-group col-xs-12">
+        <a href ng-repeat="tag in track.tags" ng-click="TrackService.deleteTag($index, track, tag)"><span class="badge bg-genre">{{ '#' + tag.name }}</span><i class="icon-cancel-alt"></i></a>
+      </div>
+
+      <div class="rt-track-wave-form-actions form-group col-xs-12">
+          <a class="btn-flat" ng-click="track.edit = false">Отменить</a>
+          <button class="btn-flat" type="submit">Сохранить</button>
+      </div>
+  </form>    
+  <div class="clear"></div>
+</div>

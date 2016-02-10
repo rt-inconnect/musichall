@@ -1,0 +1,10 @@
+<fs-track-wave track="track" tags="true" comment="true"></fs-track-wave>
+
+<ul class="rt-tabmenu nav navbar-nav clear rt-background">
+  <li ng-class="{ active: $state.includes('*.comments') }"><a ui-sref="track.comments({ id: track.id })"><i class="icon-chat"></i> <span class="hidden-xs">Комментарии </span>({{track.numComments | kNumber}})</a></li>
+  <li ng-class="{ active: $state.includes('*.likes') }"><a ui-sref="track.likes({ id: track.id })"><i class="icon-heart-1"></i> <span class="hidden-xs">Лайки </span>({{track.numLikes | kNumber}})</a></li>
+  <li ng-class="{ active: $state.includes('*.playlists') }"><a ui-sref="track.playlists({ id: track.id })"><i class="icon-list"></i> <span class="hidden-xs">В плейлистах</span></a></li>
+  <li ng-class="{ active: $state.includes('*.same') }"><a ui-sref="track.same({ id: track.id })"><i class="icon-music"></i> <span class="hidden-xs">Похожие трэки</span></a></li>
+</ul>
+
+<div class="rt-tabcontent2" ui-view></div>

@@ -1,0 +1,22 @@
+<div class="rt-popular row">
+  <div class="rt-popular-content col-xs-12 col-sm-9">
+    <div class="rt-popular-tracks">
+      <div class="rt-track-list" dnd-list="tracks.items.all" dnd-disable-if="true">
+        <fs-track-wave tracks="tracks.items.all" track="track" index="$index" ng-repeat="track in tracks.items.all"></fs-track-wave>
+      </div>
+		<div style="padding: 10px;">
+		    <a href class="btn-flat pull-right" ng-click="tracks.getAll(allOpts)" style="margin-bottom:20px;">
+		      <span class="fa fa-chevron-circle-down"></span> Load more...
+		    </a>
+
+		    <div ng-show='tracks.busy.all'>Loading data...</div>
+		</div>      
+    </div>
+  </div>
+  <div class="rt-popular-right col-xs-12 col-sm-3">
+    <ul class="rt-popular-right-genres">
+      <li ng-class="{'active':!allOpts.criteria.genre || allOpts.criteria.genre == 0}" class="truncate"><a ui-sref="main.explore({genre: 0})">Все жанры</a></li>
+      <li ng-class="{'active':allOpts.criteria.genre == genre.id}" ng-repeat="genre in genres" class="truncate"><a ui-sref="main.explore({genre: genre.id})">{{genre.name}}</a></li>
+    </ul>
+  </div>
+</div>

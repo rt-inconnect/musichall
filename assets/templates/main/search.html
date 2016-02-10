@@ -1,0 +1,41 @@
+<div class="rt-popular row">
+  <div class="rt-popular-content col-xs-12 col-sm-9">
+    <div class="rt-popular-tracks">
+
+      <div class="rt-track-list" dnd-list="results.items[type]" dnd-disable-if="true" ng-if="type == 'track'">
+        <fs-track-wave tracks="results.items[type]" track="track" index="$index" ng-repeat="track in results.items[type]"></fs-track-wave>
+      </div>
+
+      <fs-profile-thumb user="user" ng-repeat="user in results.items[type]" ng-if="type == 'user'"></fs-profile-thumb>
+
+      <ul class="rt-playlists" ng-if="type == 'playlist'">
+        <li ng-repeat="playlist in results.items[type]">
+          <fs-playlist-wave playlist="playlist" playlists="results.items[type]" limit="3" index="$index"></fs-playlist-wave>        
+        </li>
+      </ul>
+
+      <p ng-if="results.items[type].length == 0">К сожалению ничего не найдено</p>
+
+  		<div style="padding: 10px;">
+		    <a href class="btn-flat pull-right" ng-click="results.getAll(resultsOpts)" style="margin-bottom:20px;">
+		      <span class="fa fa-chevron-circle-down"></span> Load more...
+		    </a>
+
+		    <div ng-show='results.busy[type]'>Loading data...</div>
+  		</div>      
+    </div>
+  </div>
+  <div class="rt-popular-right col-xs-12 col-sm-3">
+    <ul class="rt-popular-right-genres">
+      <li ng-class="{'active':type == 'track'}" class="truncate">
+        <a ui-sref="main.search({type: 'track', q:q})">Трэки</a>
+      </li>
+      <li ng-class="{'active':type == 'playlist'}" class="truncate">
+        <a ui-sref="main.search({type: 'playlist', q:q})">Плэйлисты</a>
+      </li>
+      <li ng-class="{'active':type == 'user'}" class="truncate">
+        <a ui-sref="main.search({type: 'user', q:q})">Пользователи</a>
+      </li>
+    </ul>
+  </div>
+</div>

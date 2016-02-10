@@ -1,0 +1,73 @@
+<div class="rt-track-thumb" dnd-draggable="track">
+  <img ng-src="{{ track.coverUrl || track.createdBy.avatarUrl }}">
+  <div class="rt-track-view"ng-show="!track.edit">
+    <div class="rt-track-controls">
+      <div class="rt-track-header clear">
+        <div class="rt-track-update pull-right">
+          <a href ng-click="TrackService.share(track)" title="Получить код виджета и разместить у себя на сайте" class="btn"><i class="icon-share-2"></i></a>
+          <a href ng-click="track.edit = !track.edit" title="Редактировать песню" class="btn" ng-if="IfService.canEdit(track.createdBy.id)"><i class="icon-edit"></i></a>
+          <a href ng-click="TrackService.delete(track, index, tracks)" title="Удалить песню" ng-if="IfService.canEdit(track.createdBy.id)" class="btn"><i class="icon-trash"></i></a>
+        </div>
+        <div class="rt-track-otherinfo truncate">
+          <a ui-sref="main.explore({genre: track.genreId.id})" class="truncate"><span class="rt-track-genre">{{ track.genreId.name }}</span></a> <br/>
+          <span class="rt-track-createdat" am-time-ago="track.createdAt"></span>
+        </div>
+      </div>
+      <div class="rt-track-actions">
+        <a href ng-click="TrackService.like(track)" title="Лайкнуть" class="text-xl" ng-class="{'active':track.isLiked}"><i class="icon-heart-1"></i></a>
+        <a href ng-click="player.play(track, index, tracks)" ng-if="IfService.trackPaused(track.id)" title="Возпроизвести" class="btn btn-xl btn-play"><i class="icon-play-1"></i></a>
+        <a href ng-click="player.pause()" ng-if="IfService.trackPlaying(track.id)" title="Пауза" class="btn btn-xl btn-pause"><i class="icon-pause"></i></a>
+        <a href ng-click="TrackService.toPlaylist(track)" title="Добавить в плэйлист" class="text-xl"><i class="icon-list-add"></i></a>
+      </div>
+    </div>
+    <div class="rt-track-info truncate">
+      <div fs-profile-popover="track.createdBy" class="profile">
+          <a ui-sref="user.tracks({user:fsProfilePopover.login})" class="font-bold truncate">{{ track.createdBy.login }}</a>
+      </div>
+      <a ui-sref="track.comments({ id: track.id })" class="rt-track-name"><span>{{ track.name }}</span></a>        
+    </div>
+  </div>
+
+  <form ng-submit="TrackService.save(track)" ng-if="track.edit && IfService.canEdit(track.createdBy.id)" class="rt-track-thumb-form row">
+    <div class="rt-uploading"><span class="rt-uploading-progress" ng-style="{width:track.coverProgress + '%'}"></span></div>
+    <div class="form-group col-xs-8">
+        <input type="text" class="form-control" id="name" ng-model="track.name" placeholder="Название">
+    </div>
+    <div class="col-xs rt-track-update pull-right">
+      <button title="Сохранить" class="btn"><i class="icon-ok"></i></button>
+      <a href ng-click="track.edit = false" title="Отмена" class="btn"><i class="icon-cancel"></i></a>
+    </div>
+    <div class="form-group col-xs-6">
+        <input type="text" class="form-control" 
+          ng-model="TrackService.genreSelected"
+          ng-click="TrackService.genreSelected = ''"
+          typeahead="result as result.name for result in TrackService.searchGenre($viewValue)"
+          typeahead-on-select="TrackService.selectGenre(track)"
+          typeahead-append-to-body="true"
+          placeholder="{{track.genreId.name || 'Жанр'}}">
+    </div>
+    <div class="form-group col-xs-6">
+        <input type="text" class="form-control" 
+          ng-model="TrackService.tagSelected"
+          ng-click="TrackService.tagSelected = ''"
+          typeahead="result as result.name for result in TrackService.searchTag($viewValue)"
+          typeahead-on-select="TrackService.selectTag(track)"
+          typeahead-append-to-body="true"
+          typeahead-focus-first="false"
+          placeholder="Тэги"
+          ng-keydown="TrackService.createTag($event, track)">                
+    </div>
+    <div class="form-group col-xs-12">
+      <input type="file" id="cover_url" nv-file-select="" uploader="TrackService.uploader" options="{track:track}">
+    </div>
+    <div class="form-group col-xs-12">
+      <a class="thumb-sm m-l-xs" href ng-repeat="cover in track.covers" ng-click="track.coverUrl = cover">
+        <img ng-src="{{ cover }}">
+      </a>
+    </div>    
+
+    <div class="form-group col-xs-12 truncate">
+      <a href ng-repeat="tag in track.tags" ng-click="TrackService.deleteTag($index, track, tag)" title="Удалить тэг"><span class="badge bg-genre">{{ '#' + tag.name }} </span> </a>
+    </div>
+  </form>
+</div>

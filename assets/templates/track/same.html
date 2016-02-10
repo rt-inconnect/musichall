@@ -1,0 +1,11 @@
+<div class="rt-track-list" dnd-list="tracks.items.same" dnd-disable-if="true">
+  <fs-track-thumb tracks="tracks.items.same" track="track" index="$index" ng-repeat="track in tracks.items.same" ng-if="isThumb"></fs-track-thumb>
+  <fs-track-wave tracks="tracks.items.same" track="track" index="$index" ng-repeat="track in tracks.items.same" ng-if="!isThumb"></fs-track-wave>
+</div>
+<div style="padding: 10px;">
+    <a href class="btn-flat pull-right" ng-click="tracks.getAll(sameOpts)" style="margin-bottom:20px;">
+      <span class="fa fa-chevron-circle-down"></span> Load more...
+    </a>
+
+    <div ng-show='tracks.busy.same'>Loading data...</div>
+</div>
